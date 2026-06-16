@@ -1,0 +1,66 @@
+<div class="tarjeta-partido">
+  <div class="grupo-header">{{ partido().grupo }}</div>
+
+  <div class="equipos-container">
+    <div class="equipo">
+      <div class="bandera-wrapper">
+        <img [ngSrc]="partido().equipoLocal.bandera" alt="Local" fill class="bandera">
+      </div>
+      <span class="nombre-equipo">{{ partido().equipoLocal.nombre }}</span>
+    </div>
+
+
+    <div class="vs-badge">
+      @if (partido().estado === 'FINALIZADO') {
+        <span class="marcador-oficial">{{ partido().golesLocal }} - {{ partido().golesVisitante }}</span>
+      } @else {
+        VS
+      }
+    </div>
+
+    <div class="equipo">
+      <div class="bandera-wrapper">
+        <img [ngSrc]="partido().equipoVisitante.bandera" alt="Visitante" fill class="bandera">
+      </div>
+      <span class="nombre-equipo">{{ partido().equipoVisitante.nombre }}</span>
+    </div>
+  </div>
+
+  <div class="footer-fecha">{{ partido().fecha }}</div>
+
+  @if (partido().estado === 'FINALIZADO') {
+    <div class="feedback-apuesta"
+         [class.exito]="resultadoApuesta() === 'ACERTO'"
+         [class.fallo]="resultadoApuesta() === 'FALLO'"
+         [class.sin-voto]="!votoActual()">
+
+      @if (!votoActual()) {
+        No registraste tu voto (0 pts)
+      } @else if (resultadoApuesta() === 'ACERTO') {
+        Correcto +1 Punto
+      } @else {
+        Incorrecto (0 Pts)
+      }
+    </div>
+  }
+
+  <div class="zona-votacion">
+    <button class="btn-voto"
+            [class.activo]="votoActual() === 'LOCAL'"
+            [disabled]="yaVoto() || partido().estado === 'FINALIZADO'"
+            (click)="votar('LOCAL')">Local
+    </button>
+
+    <button class="btn-voto empate"
+            [class.activo]="votoActual() === 'EMPATE'"
+            [disabled]="yaVoto() || partido().estado === 'FINALIZADO'"
+            (click)="votar('EMPATE')">Empate
+    </button>
+
+    <button class="btn-voto"
+            [class.activo]="votoActual() === 'VISITANTE'"
+            [disabled]="yaVoto() || partido().estado === 'FINALIZADO'"
+            (click)="votar('VISITANTE')">Visita
+    </button>
+  </div>
+</div>

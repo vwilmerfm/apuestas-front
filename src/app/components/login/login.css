@@ -1,0 +1,138 @@
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  color: white;
+  text-align: center;
+}
+
+.titulo-login {
+  font-size: 32px;
+  margin-bottom: 40px;
+  color: #ffd700;
+}
+
+.subtitulo {
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.grid-usuarios {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+}
+
+.tarjeta-usuario {
+  background: rgba(0, 31, 130, 0.5);
+  border: 2px solid #0044cc;
+  border-radius: 12px;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.tarjeta-usuario:active {
+  transform: scale(0.95);
+  background-color: #0044cc;
+}
+
+.avatar {
+  font-size: 40px;
+  background: white;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.nombre {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.input-pin {
+  width: 150px;
+  font-size: 40px;
+  text-align: center;
+  letter-spacing: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 2px solid white;
+  background: transparent;
+  color: white;
+  margin-bottom: 20px;
+  outline: none;
+}
+
+.input-pin.error {
+  border-color: #ff3b30;
+  animation: shake 0.4s;
+}
+
+.texto-error {
+  color: #ff3b30;
+  font-weight: bold;
+}
+
+.btn-volver {
+  background: transparent;
+  color: #ffd700;
+  border: none;
+  font-size: 16px;
+  margin-top: 20px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-10px);
+  }
+  75% {
+    transform: translateX(10px);
+  }
+}
+
+.pin-cajas {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.pin-cajas input {
+  width: 55px;
+  height: 65px;
+  font-size: 32px;
+  text-align: center;
+  border-radius: 12px;
+  border: 2px solid rgba(255, 215, 0, 0.4);
+  background: rgba(0, 31, 130, 0.3);
+  color: white;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.pin-cajas input:focus {
+  border-color: #ffd700;
+  background: rgba(0, 31, 130, 0.6);
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+}
+
+.pin-cajas.error input {
+  border-color: #ff3b30;
+  animation: shake 0.4s;
+}

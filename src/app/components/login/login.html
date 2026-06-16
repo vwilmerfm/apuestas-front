@@ -1,0 +1,44 @@
+<div class="login-container">
+  <h1 class="titulo-login" (click)="activarLoginOculto()">Pronósticos 2026</h1>
+
+  @if (!usuarioSeleccionado()) {
+    <h2 class="subtitulo">Ingresar con..</h2>
+    <div class="grid-usuarios">
+      @for (user of usuarios(); track user.id) {
+        <div class="tarjeta-usuario" (click)="seleccionarUsuario(user)">
+          <div class="avatar">{{ user.avatar }}</div>
+          <div class="nombre">{{ user.nombre }}</div>
+        </div>
+      }
+    </div>
+  } @else {
+    <h2 class="subtitulo">Hola, {{ usuarioSeleccionado().nombre }}</h2>
+    <p class="texto-instruccion">Ingresa tu PIN de 4 dígitos</p>
+
+    <form (submit)="$event.preventDefault()">
+      <div class="pin-cajas" [class.error]="errorPin()">
+        <input #caja1 type="password" inputmode="numeric" maxlength="1"
+               [value]="pinDigitos()[0]" (input)="onInput($event, 0, caja2)" (keydown)="onKeyDown($event, 0, null)"
+               autocomplete="one-time-code" autofocus>
+
+        <input #caja2 type="password" inputmode="numeric" maxlength="1"
+               [value]="pinDigitos()[1]" (input)="onInput($event, 1, caja3)" (keydown)="onKeyDown($event, 1, caja1)"
+               autocomplete="one-time-code">
+
+        <input #caja3 type="password" inputmode="numeric" maxlength="1"
+               [value]="pinDigitos()[2]" (input)="onInput($event, 2, caja4)" (keydown)="onKeyDown($event, 2, caja2)"
+               autocomplete="one-time-code">
+
+        <input #caja4 type="password" inputmode="numeric" maxlength="1"
+               [value]="pinDigitos()[3]" (input)="onInput($event, 3, null)" (keydown)="onKeyDown($event, 3, caja3)"
+               autocomplete="one-time-code">
+      </div>
+    </form>
+
+    @if (errorPin()) {
+      <p class="texto-error">PIN incorrecto, intenta de nuevo..</p>
+    }
+
+    <button class="btn-volver" (click)="volver()">Volver</button>
+  }
+</div>

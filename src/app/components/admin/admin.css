@@ -1,0 +1,427 @@
+.admin-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  color: white;
+  text-align: center;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.admin-container h2 {
+  color: #ffd700;
+  margin-bottom: 25px;
+  font-size: 24px;
+}
+
+.input-admin {
+  width: 100%;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: 2px solid rgba(0, 68, 204, 0.5);
+  background: rgba(0, 31, 130, 0.3);
+  color: white;
+  font-size: 18px;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.input-admin::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.input-admin:focus {
+  border-color: #ffd700;
+  background: rgba(0, 31, 130, 0.6);
+}
+
+.selector-avatar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+  margin-bottom: 30px;
+  margin-top: 10px;
+}
+
+.selector-avatar button {
+  background: rgba(0, 31, 130, 0.5);
+  border: 2px solid transparent;
+  border-radius: 50%;
+  font-size: 32px;
+  width: 65px;
+  height: 65px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease-in-out;
+}
+
+.selector-avatar button.activo {
+  border-color: #ffd700;
+  background: #0044cc;
+  transform: scale(1.15);
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+}
+
+.btn-guardar {
+  background-color: #0044cc;
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.2s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.btn-guardar:active {
+  background-color: #002266;
+  transform: translateY(2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.btn-guardar:disabled {
+  background-color: rgba(0, 68, 204, 0.4);
+  color: rgba(255, 255, 255, 0.5);
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.toast-notificacion {
+  position: fixed;
+  bottom: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #00c853;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: bold;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  transition: bottom 0.4s ease-in-out;
+  z-index: 1000;
+  text-align: center;
+  width: max-content;
+}
+
+.toast-notificacion.visible {
+  bottom: 30px;
+}
+
+.toast-notificacion.toast-error {
+  background-color: #ff3b30;
+  box-shadow: 0 4px 12px rgba(255, 59, 48, 0.5);
+}
+
+.admin-seccion {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.separador {
+  width: 100%;
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  margin: 10px 0 30px 0;
+}
+
+.select-partido {
+  cursor: pointer;
+  appearance: none;
+  font-size: 16px;
+}
+
+.select-partido option {
+  background-color: #010a2e;
+  color: white;
+}
+
+.marcador-inputs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 350px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.input-goles-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100px;
+}
+
+.input-goles-wrapper label {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 5px;
+}
+
+.input-goles {
+  width: 100%;
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  padding: 10px;
+  margin-bottom: 0;
+}
+
+.vs-texto {
+  font-weight: 900;
+  color: #ffd700;
+  font-size: 20px;
+  padding-top: 25px;
+}
+
+.btn-resultado {
+  background-color: #00c853;
+}
+
+.btn-resultado:active {
+  background-color: #009624;
+}
+
+.btn-resultado:disabled {
+  background-color: rgba(0, 200, 83, 0.4);
+}
+
+.equipo-select-wrapper {
+  flex: 1;
+  display: flex;
+}
+
+.equipo-select-wrapper .select-partido {
+  width: 100%;
+}
+
+.acciones-partido {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.btn-resultado {
+  flex: 4;
+}
+
+.btn-eliminar {
+  flex: 1;
+  background-color: #ff3b30;
+  padding: 15px 0;
+}
+
+.btn-eliminar:active {
+  background-color: #cc2922;
+}
+
+.btn-eliminar:disabled {
+  background-color: rgba(255, 59, 48, 0.4);
+}
+
+.admin-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 30px;
+  width: 100%;
+  /* MAGIA: Si no caben, bajan automáticamente a la siguiente línea */
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.admin-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.admin-tabs button {
+  background: rgba(0, 31, 130, 0.5);
+  border: 1px solid #0044cc;
+  color: white;
+  padding: 10px 16px; /* Un poco más de padding vertical para clics fáciles */
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  /* MAGIA: Permite que los botones crezcan y se adapten al espacio disponible */
+  flex: 1 1 auto;
+  white-space: nowrap;
+}
+
+.admin-tabs button.activo {
+  background: #ffd700;
+  color: #010a2e;
+  border-color: #ffd700;
+}
+
+.resultado-acierto {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.bandera-mini {
+  width: 24px;
+  height: 16px;
+  border-radius: 2px;
+  object-fit: cover;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.equipo-texto {
+  font-size: 13px;
+  color: white;
+  font-weight: bold;
+}
+
+.marcador-mini {
+  font-size: 16px;
+  font-weight: 900;
+  color: #00e676;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 2px 8px;
+  border-radius: 6px;
+  margin: 0 5px;
+}
+
+.input-admin, .btn-guardar {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 350px;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+.equipo-select-wrapper select {
+  text-align: center;
+  text-align-last: center;
+}
+
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+input[type="datetime-local"] {
+  color-scheme: white;
+}
+
+.acciones-partido {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  max-width: 350px;
+  margin: 0 auto;
+}
+
+.contenedor-monitoreo {
+  margin-top: 20px;
+}
+
+.grid-monitoreo {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.tarjeta-monitoreo {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background: rgba(0, 31, 130, 0.4);
+  border-left: 4px solid #00e676;
+  padding: 15px;
+  border-radius: 8px;
+  transition: all 0.3s;
+}
+
+.tarjeta-monitoreo.alerta {
+  border-left-color: #ff3b30;
+  background: rgba(255, 59, 48, 0.15);
+}
+
+.avatar-mon {
+  font-size: 30px;
+}
+
+.nombre-mon {
+  font-weight: bold;
+  font-size: 16px;
+  color: white;
+}
+
+.badge-verde {
+  color: #00e676;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.badge-rojo {
+  color: #ff3b30;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.fase-acierto {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+.btn-whatsapp {
+  background-color: #25D366;
+  color: white;
+  border: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  padding: 0;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s;
+  animation: latido-whatsapp 2s infinite;
+}
+
+.btn-whatsapp:active {
+  transform: scale(0.95);
+  background-color: #128C7E;
+  animation: none;
+}
+
+@keyframes latido-whatsapp {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
+  }
+  70% {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 10px rgba(37, 211, 102, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+  }
+}

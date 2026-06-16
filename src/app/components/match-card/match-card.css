@@ -1,0 +1,179 @@
+.tarjeta-partido {
+  background: linear-gradient(135deg, #021250 0%, #010a2e 100%);
+  border-radius: 12px;
+  color: white;
+  font-family: Arial, sans-serif;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+}
+
+.grupo-header {
+  background-color: white;
+  color: #021250;
+  text-align: center;
+  font-weight: bold;
+  padding: 4px 0;
+  margin: 0 auto;
+  width: fit-content;
+  padding: 4px 20px;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  font-size: 14px;
+}
+
+.equipos-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 15px;
+  background-color: rgba(0, 31, 130, 0.3);
+  margin-top: 10px;
+}
+
+.equipo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+
+.equipo:last-child {
+  justify-content: flex-end;
+}
+
+.nombre-equipo {
+  font-weight: bold;
+  font-size: 16px;
+  text-transform: uppercase;
+}
+
+.bandera {
+  width: 45px;
+  height: 30px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  object-fit: cover;
+}
+
+.vs-badge {
+  font-weight: 900;
+  font-size: 20px;
+  margin: 0 15px;
+  color: white;
+  text-shadow: 1px 1px 2px black;
+  flex-shrink: 0;
+}
+
+.footer-fecha {
+  text-align: center;
+  font-size: 11px;
+  color: #ffd700;
+  padding: 8px;
+  background-color: rgba(0, 0, 0, 0.2);
+  font-weight: bold;
+}
+
+.zona-votacion {
+  display: flex;
+  gap: 8px;
+  padding: 15px;
+}
+
+.btn-voto {
+  flex: 1;
+  background-color: #0044cc;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-voto:active {
+  background-color: #002266;
+}
+
+.btn-voto.empate {
+  background-color: #333;
+}
+
+.btn-voto.empate:active {
+  background-color: #111;
+}
+
+
+.bandera-wrapper {
+  position: relative;
+  width: 45px;
+  height: 30px;
+}
+
+.bandera {
+  object-fit: cover;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.btn-voto.activo {
+  background-color: #ffd700;
+  color: #010a2e;
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.btn-voto.empate.activo {
+  background-color: #ffd700;
+  color: #010a2e;
+}
+
+.btn-voto:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-voto.activo:disabled {
+  opacity: 1;
+}
+
+.marcador-oficial {
+  color: #00e676;
+  font-size: 24px;
+  font-weight: 900;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 4px 10px;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+
+.feedback-apuesta {
+  text-align: center;
+  padding: 8px;
+  font-weight: bold;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+}
+
+.feedback-apuesta.exito {
+  background-color: rgba(0, 230, 118, 0.2);
+  color: #00e676;
+  border-top: 1px solid #00e676;
+  border-bottom: 1px solid #00e676;
+}
+
+.feedback-apuesta.fallo {
+  background-color: rgba(255, 59, 48, 0.1);
+  color: #ff3b30;
+  border-top: 1px solid rgba(255, 59, 48, 0.3);
+  border-bottom: 1px solid rgba(255, 59, 48, 0.3);
+}
+
+.feedback-apuesta.sin-voto {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.5);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}

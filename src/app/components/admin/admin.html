@@ -1,0 +1,229 @@
+<div class="admin-container">
+
+  <div class="admin-tabs">
+    <button [class.activo]="tabActual() === 'registro'" (click)="tabActual.set('registro')">Participante</button>
+    <button [class.activo]="tabActual() === 'finalizar'" (click)="tabActual.set('finalizar')">Finalizar</button>
+    <button [class.activo]="tabActual() === 'programar'" (click)="tabActual.set('programar')">Programar</button>
+    <button [class.activo]="tabActual() === 'monitoreo'"
+            (click)="tabActual.set('monitoreo'); cargarMonitoreo()">
+      Monitoreo
+    </button>
+    <button [class.activo]="tabActual() === 'aciertos'" (click)="tabActual.set('aciertos')">Aciertos</button>
+  </div>
+
+
+  @if (tabActual() === 'registro') {
+    <div class="admin-seccion">
+      <h2>Registrar Participante</h2>
+
+      <input [(ngModel)]="nombre" placeholder="Nombre del jugador" class="input-admin">
+      <input [(ngModel)]="pin" type="number" placeholder="PIN inicial" class="input-admin">
+
+      <div class="selector-avatar">
+        @for (emoji of avataresDisponibles; track emoji) {
+          <button (click)="avatar.set(emoji)" [class.activo]="avatar() === emoji">
+            {{ emoji }}
+          </button>
+        }
+      </div>
+
+      <button
+        (click)="registrarUsuario()"
+        class="btn-guardar btn-resultado"
+        [disabled]="!formularioValido()">
+        Guardar
+      </button>
+    </div>
+  }
+
+  @if (tabActual() === 'finalizar') {
+    <div class="admin-seccion">
+      <h2>Finalizar Partido</h2>
+
+      <select
+        [(ngModel)]="grupoAdminSeleccionado"
+        (change)="partidoSeleccionadoId.set(null)"
+        class="input-admin select-partido"
+        style="margin-bottom: 10px;">
+        @for (grupo of gruposAdminDisponibles(); track grupo) {
+          <option [ngValue]="grupo">{{ grupo }}</option>
+        }
+      </select>
+
+      <select [(ngModel)]="partidoSeleccionadoId" class="input-admin select-partido">
+        <option [ngValue]="null" disabled>-- Selecciona un partido --</option>
+        @for (partido of partidosPendientesFiltrados(); track partido.id) {
+          <option [ngValue]="partido.id">
+            {{ partido.equipoLocal | uppercase }} vs {{ partido.equipoVisitante | uppercase }}
+          </option>
+        }
+      </select>
+
+      <div class="marcador-inputs">
+        <div class="input-goles-wrapper">
+          <label>Goles Local</label>
+          <input [(ngModel)]="golesLocal" type="number" min="0" class="input-admin input-goles">
+        </div>
+        <span class="vs-texto">VS</span>
+        <div class="input-goles-wrapper">
+          <label>Goles Visita</label>
+          <input [(ngModel)]="golesVisitante" type="number" min="0" class="input-admin input-goles">
+        </div>
+      </div>
+
+      <div class="acciones-partido">
+        <button
+          (click)="guardarResultado()"
+          class="btn-guardar btn-resultado"
+          [disabled]="!formularioPartidoValido()">
+          Guardar Resultado
+        </button>
+
+        <button
+          (click)="eliminarPartido()"
+          class="btn-guardar btn-eliminar"
+          [disabled]="!partidoSeleccionadoId()">
+          🗑️
+        </button>
+      </div>
+    </div>
+  }
+
+  @if (tabActual() === 'programar') {
+    <div class="admin-seccion">
+      <h2>Programar Partido</h2>
+
+      <input [(ngModel)]="nuevaFase" placeholder="Fase (Ej. Grupo A o Final)" class="input-admin">
+
+      <div class="marcador-inputs">
+        <div class="equipo-select-wrapper">
+          <select [(ngModel)]="nuevoEquipoLocal" class="input-admin select-partido" style="margin-bottom: 0;">
+            <option value="" disabled>-- Local --</option>
+            @for (equipo of equiposDisponibles; track equipo.id) {
+              <option [value]="equipo.id">{{ equipo.nombre }}</option>
+            }
+          </select>
+        </div>
+
+        <span class="vs-texto" style="padding-top: 0;">VS</span>
+
+        <div class="equipo-select-wrapper">
+          <select [(ngModel)]="nuevoEquipoVisitante" class="input-admin select-partido" style="margin-bottom: 0;">
+            <option value="" disabled>-- Visita --</option>
+            @for (equipo of equiposDisponibles; track equipo.id) {
+              <option [value]="equipo.id">{{ equipo.nombre }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <input [(ngModel)]="nuevaFechaHora" type="datetime-local" class="input-admin">
+
+      <button
+        (click)="crearPartido()"
+        class="btn-guardar btn-resultado"
+        [disabled]="!formularioNuevoPartidoValido()">
+        Crear Partido
+      </button>
+    </div>
+  }
+
+  @if (tabActual() === 'monitoreo') {
+    <div class="contenedor-monitoreo">
+      <h2 class="subtitulo-admin">Estado de Pronósticos (Hoy)</h2>
+
+      @if (monitoreoDatos().length > 0 && monitoreoDatos()[0].totalHoy > 0) {
+        <div class="grid-monitoreo">
+          @for (user of monitoreoDatos(); track user.nombre) {
+<!--            <div class="tarjeta-monitoreo" [class.alerta]="!user.completado">-->
+<!--              <div class="avatar-mon">{{ user.avatar }}</div>-->
+<!--              <div class="info-mon">-->
+<!--                <div class="nombre-mon">{{ user.nombre }}</div>-->
+<!--                <div class="estado-mon">-->
+<!--                  @if (user.completado) {-->
+<!--                    <span class="badge-verde">Votos ({{ user.votosHechos }} de {{ user.totalHoy }})</span>-->
+<!--                  } @else {-->
+<!--                    <span class="badge-rojo">Falta votar ({{ user.votosHechos }} de {{ user.totalHoy }})</span>-->
+<!--                    &nbsp;-->
+<!--                    <button class="btn-whatsapp" (click)="recordarPorWhatsApp(user.nombre)">-->
+<!--                      🚨-->
+<!--                    </button>-->
+<!--                  }-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
+            <div class="tarjeta-monitoreo" [class.alerta]="!user.completado">
+              <div class="avatar-mon">{{ user.avatar }}</div>
+
+              <div class="info-mon" style="flex: 1; text-align: left;">
+                <div class="nombre-mon">{{ user.nombre }}</div>
+                <div class="estado-mon">
+                  @if (user.completado) {
+                    <span class="badge-verde">Votos ({{ user.votosHechos }} de {{ user.totalHoy }})</span>
+                  } @else {
+                    <span class="badge-rojo">Falta votar ({{ user.votosHechos }} de {{ user.totalHoy }})</span>
+                  }
+                </div>
+              </div>
+
+              @if (!user.completado) {
+                <button class="btn-whatsapp" (click)="recordarPorWhatsApp(user.nombre)">
+                  🚨
+                </button>
+              }
+            </div>
+          }
+        </div>
+      } @else {
+        <p class="mensaje-vacio">No hay partidos pendientes para el día de hoy.</p>
+      }
+    </div>
+  }
+
+  @if (tabActual() === 'aciertos') {
+    <div class="admin-seccion">
+      <h2>Historial de Aciertos</h2>
+
+      <select class="input-admin select-partido" (change)="seleccionarUsuarioHistorial($event)">
+        <option value="" disabled selected>-- Selecciona un jugador --</option>
+        @for (user of usuariosDisponibles(); track user.id) {
+          <option [value]="user.id">{{ user.avatar }} {{ user.nombre }}</option>
+        }
+      </select>
+
+      @if (usuarioHistorialId()) {
+        <div class="grid-monitoreo" style="margin-top: 20px;">
+          @for (acierto of historialAciertos(); track acierto.id) {
+            <div class="tarjeta-monitoreo" style="border-left-color: #ffd700;">
+
+              <div class="info-mon" style="width: 100%; text-align: center;">
+                <div class="fase-acierto">{{ acierto.fase }}</div>
+
+                <div class="resultado-acierto">
+                  <img [src]="acierto.banderaLocal" class="bandera-mini" alt="Local">
+                  <span class="equipo-texto">{{ acierto.nombreLocal }}</span>
+                  <span class="marcador-mini">{{ acierto.golesLocal }} - {{ acierto.golesVisitante }}</span>
+                  <span class="equipo-texto">{{ acierto.nombreVisitante }}</span>
+                  <img [src]="acierto.banderaVisitante" class="bandera-mini" alt="Visita">
+                </div>
+
+                <div class="badge-verde" style="color: #ffd700; margin-top: 8px;">
+                  Predicción: {{ acierto.pronosticoAdivinado }}
+                </div>
+
+              </div>
+            </div>
+          } @empty {
+            <p class="mensaje-vacio">Aún no tienes aciertos registrados..</p>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  <div class="toast-notificacion"
+       [class.visible]="mostrarToast()"
+       [class.toast-error]="esErrorToast()">
+    {{ mensajeToast() }}
+  </div>
+</div>
