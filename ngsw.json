@@ -1,0 +1,85 @@
+{
+  "configVersion": 1,
+  "timestamp": 1781632455617,
+  "index": "/apuestas-front/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/apuestas-front/favicon.ico",
+        "/apuestas-front/index.html",
+        "/apuestas-front/main-PKDRYLDY.js",
+        "/apuestas-front/manifest.webmanifest",
+        "/apuestas-front/styles-PKB5I6ON.css"
+      ],
+      "patterns": []
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/apuestas-front/icons/120x120.png",
+        "/apuestas-front/icons/128x128.png",
+        "/apuestas-front/icons/144x144.png",
+        "/apuestas-front/icons/152x152.png",
+        "/apuestas-front/icons/16x16.png",
+        "/apuestas-front/icons/180x180.png",
+        "/apuestas-front/icons/192x192.png",
+        "/apuestas-front/icons/32x32.png",
+        "/apuestas-front/icons/384x384.png",
+        "/apuestas-front/icons/512x512.png",
+        "/apuestas-front/icons/72x72.png",
+        "/apuestas-front/icons/96x96.png"
+      ],
+      "patterns": []
+    }
+  ],
+  "dataGroups": [],
+  "hashTable": {
+    "/apuestas-front/favicon.ico": "9c39f434fe1261f68c5e3eefdf734630d99c5670",
+    "/apuestas-front/icons/120x120.png": "f9649bd697824696797059ac52dab12976e0ae3a",
+    "/apuestas-front/icons/128x128.png": "55600f9fa7fe24247a0b1cf8112bf97f777206d0",
+    "/apuestas-front/icons/144x144.png": "2f08a144a00cefc6d4c8eefa16e81325f1b83f06",
+    "/apuestas-front/icons/152x152.png": "1c4cdd82c2101c46700a334fcfc41044a04e562a",
+    "/apuestas-front/icons/16x16.png": "5e617994d2642c4dac3901d24bcd72f1503fe4d3",
+    "/apuestas-front/icons/180x180.png": "e2b17e033cb9b515bd74d1a606b86a0f0faa34b2",
+    "/apuestas-front/icons/192x192.png": "4aa78fa9e0dbf4dabcef009ff8e17aba86b9a42d",
+    "/apuestas-front/icons/32x32.png": "d2983ff7f3685ba149901e8e1cb99eda055e7c39",
+    "/apuestas-front/icons/384x384.png": "7394a34ed5f4c6bd4f740d77c7b8e46456e154c3",
+    "/apuestas-front/icons/512x512.png": "e1550c11fd59b4b1d448a245b792715f3d0436a2",
+    "/apuestas-front/icons/72x72.png": "049178b1be6eb820a0fac95801e586fe6105de02",
+    "/apuestas-front/icons/96x96.png": "d622a48ca8a2dcf6640346b1e3f4ad2da7303e6d",
+    "/apuestas-front/index.html": "3cf320df86905a0e3df6475035eddc732e0684ca",
+    "/apuestas-front/main-PKDRYLDY.js": "844df88000c4c42b34dcc2280dcb54861c613210",
+    "/apuestas-front/manifest.webmanifest": "79fbe3a085b80cf7f480aff9bb9c7d45ceb07b43",
+    "/apuestas-front/styles-PKB5I6ON.css": "c4c6c68b4c15a6f29b88989fffc1060c9c371620"
+  },
+  "navigationUrls": [
+    {
+      "positive": true,
+      "regex": "^\\/.*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*\\.[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*\\/.*$"
+    }
+  ],
+  "navigationRequestStrategy": "performance"
+}
