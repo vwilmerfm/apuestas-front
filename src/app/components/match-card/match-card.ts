@@ -1,5 +1,6 @@
 import { Component, input, output, signal, OnInit, computed } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
+import confetti from 'canvas-confetti';
 
 @Component({
   selector: 'app-match-card',
@@ -51,5 +52,21 @@ export class MatchCard implements OnInit {
     this.votoActual.set(pronostico);
     this.yaVoto.set(true);
     this.votoEmitido.emit(pronostico);
+  }
+
+  celebrarAcierto() {
+    if (this.resultadoApuesta() === 'ACERTO') {
+      if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+
+      const audio = new Audio('assets/sii.mp3');
+      audio.play().catch((e) => console.log('Audio bloqueado por el navegador'));
+
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#ffd700', '#00e676', '#00e5ff'],
+      });
+    }
   }
 }

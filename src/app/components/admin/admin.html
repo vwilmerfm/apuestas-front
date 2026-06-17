@@ -17,7 +17,15 @@
       <h2>Registrar Participante</h2>
 
       <input [(ngModel)]="nombre" placeholder="Nombre del jugador" class="input-admin">
-      <input [(ngModel)]="pin" type="number" placeholder="PIN inicial" class="input-admin">
+
+      <input
+        [value]="pin()"
+        (input)="limpiarPin($event)"
+        type="text"
+        inputmode="numeric"
+        maxlength="4"
+        placeholder="PIN inicial"
+        class="input-admin">
 
       <div class="selector-avatar">
         @for (emoji of avataresDisponibles; track emoji) {
@@ -62,12 +70,12 @@
       <div class="marcador-inputs">
         <div class="input-goles-wrapper">
           <label>Goles Local</label>
-          <input [(ngModel)]="golesLocal" type="number" min="0" class="input-admin input-goles">
+          <input [(ngModel)]="golesLocal" type="number" inputmode="numeric" min="0" class="input-admin input-goles">
         </div>
         <span class="vs-texto">VS</span>
         <div class="input-goles-wrapper">
           <label>Goles Visita</label>
-          <input [(ngModel)]="golesVisitante" type="number" min="0" class="input-admin input-goles">
+          <input [(ngModel)]="golesVisitante" type="number" inputmode="numeric" min="0" class="input-admin input-goles">
         </div>
       </div>
 
@@ -135,23 +143,6 @@
       @if (monitoreoDatos().length > 0 && monitoreoDatos()[0].totalHoy > 0) {
         <div class="grid-monitoreo">
           @for (user of monitoreoDatos(); track user.nombre) {
-<!--            <div class="tarjeta-monitoreo" [class.alerta]="!user.completado">-->
-<!--              <div class="avatar-mon">{{ user.avatar }}</div>-->
-<!--              <div class="info-mon">-->
-<!--                <div class="nombre-mon">{{ user.nombre }}</div>-->
-<!--                <div class="estado-mon">-->
-<!--                  @if (user.completado) {-->
-<!--                    <span class="badge-verde">Votos ({{ user.votosHechos }} de {{ user.totalHoy }})</span>-->
-<!--                  } @else {-->
-<!--                    <span class="badge-rojo">Falta votar ({{ user.votosHechos }} de {{ user.totalHoy }})</span>-->
-<!--                    &nbsp;-->
-<!--                    <button class="btn-whatsapp" (click)="recordarPorWhatsApp(user.nombre)">-->
-<!--                      🚨-->
-<!--                    </button>-->
-<!--                  }-->
-<!--                </div>-->
-<!--              </div>-->
-<!--            </div>-->
             <div class="tarjeta-monitoreo" [class.alerta]="!user.completado">
               <div class="avatar-mon">{{ user.avatar }}</div>
 

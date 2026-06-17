@@ -99,6 +99,7 @@ export class App implements OnInit {
 
   toastMensaje = signal<string>('');
   mostrarToast = signal<boolean>(false);
+  esErrorToast = signal<boolean>(false);
 
   vistaActual = signal<'Pronósticos' | 'Ranking' | 'admin' | 'Grupos'>('Pronósticos');
   listaRanking = signal<any[]>([]);
@@ -148,6 +149,8 @@ export class App implements OnInit {
   pinActual = signal<string>('');
   pinNuevo = signal<string>('');
 
+  mensajeSalseo = signal<string>('Que empiecen los pronósticos');
+
   seleccionarDia(dia: string, event: MouseEvent) {
     this.diaSeleccionado.set(dia);
     const boton = event.target as HTMLElement;
@@ -177,6 +180,7 @@ export class App implements OnInit {
   iniciarSesion(id: number) {
     this.usuarioActualId.set(id);
     this.cargarDatos(id);
+    this.cargarRanking();
   }
 
   cargarDatos(usuarioId: number, enSegundoPlano = false) {
@@ -276,7 +280,11 @@ export class App implements OnInit {
 
     this.http.post(`${environment.apiUrl}/votos`, payload).subscribe({
       next: () => {
+        if (navigator.vibrate) {
+          navigator.vibrate(50);
+        }
         this.toastMensaje.set(`El pronóstico se guardó correctamente..`);
+        this.esErrorToast.set(false);
         this.mostrarToast.set(true);
 
         const partidosActualizados = this.partidos().map((p) => {
@@ -300,12 +308,26 @@ export class App implements OnInit {
     this.http.get<any[]>(`${environment.apiUrl}/ranking`).subscribe({
       next: (data) => {
         const rankingSinAdmin = data.filter(
-          (u: any) =>
-            u.id !== 1 && u.usuarioId !== 1 && u.nombre !== 'Admin' && u.nombre !== 'Administrador',
+          (u: any) => u.id !== 1 && u.nombre !== 'Admin' && u.nombre !== 'Administrador',
         );
-
         this.listaRanking.set(rankingSinAdmin);
-        this.vistaActual.set('Ranking');
+
+        if (rankingSinAdmin.length > 0) {
+          const primero = rankingSinAdmin[0];
+          const miUser = rankingSinAdmin.find((u) => u.id === this.usuarioActualId());
+
+          if (primero.id === this.usuarioActualId()) {
+            this.mensajeSalseo.set(`Vas ganando, ${primero.nombre}..`);
+          } else if (miUser && rankingSinAdmin.indexOf(miUser) === 1) {
+            this.mensajeSalseo.set(
+              `Ya casi logras superar a ${primero.nombre}..`,
+            );
+          } else {
+            this.mensajeSalseo.set(
+              `${primero.nombre}, lidera con ${primero.puntos} puntos`,
+            );
+          }
+        }
       },
       error: (err) => console.error('Error al cargar ranking', err),
     });
@@ -329,13 +351,15 @@ export class App implements OnInit {
   }
 
   guardarNuevoPin() {
-    if (String(this.pinActual()).length !== 4 || String(this.pinNuevo()).length !== 4) {
-      this.toastMensaje.set('Ambos PINs deben tener 4 dígitos..');
+    const pinRegex = /^\d{4}$/;
+
+    if (!pinRegex.test(String(this.pinActual())) || !pinRegex.test(String(this.pinNuevo()))) {
+      this.toastMensaje.set('Ambos PINs deben ser exactamente de 4 números..');
+      this.esErrorToast.set(true);
       this.mostrarToast.set(true);
       setTimeout(() => this.mostrarToast.set(false), 3000);
       return;
     }
-
     const payload = {
       pinActual: String(this.pinActual()),
       pinNuevo: String(this.pinNuevo()),
@@ -346,12 +370,14 @@ export class App implements OnInit {
       .subscribe({
         next: () => {
           this.toastMensaje.set('Tu PIN fue actualizado..');
+          this.esErrorToast.set(false);
           this.mostrarToast.set(true);
           this.mostrarModalPin.set(false);
           setTimeout(() => this.mostrarToast.set(false), 3000);
         },
         error: (err) => {
           this.toastMensaje.set('El PIN actual que ingresaste es incorrecto..');
+          this.esErrorToast.set(true);
           this.mostrarToast.set(true);
           setTimeout(() => this.mostrarToast.set(false), 3000);
         },

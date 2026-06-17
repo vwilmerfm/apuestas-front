@@ -154,7 +154,7 @@
   padding: 8px;
   font-weight: bold;
   font-size: 14px;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
 }
 
 .feedback-apuesta.exito {
@@ -176,4 +176,28 @@
   color: rgba(255, 255, 255, 0.5);
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.acierto-interactivo {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.emoji-btn {
+  font-size: 18px;
+  display: inline-block;
+  animation: latido-emoji 1.5s infinite;
+  filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.6));
+}
+
+@keyframes latido-emoji {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    transform: scale(1.3) rotate(10deg);
+  }
 }

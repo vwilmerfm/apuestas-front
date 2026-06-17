@@ -20,9 +20,23 @@ export class AdminPanel implements OnInit {
   avatar = signal('👤');
   avataresDisponibles = ['🐦‍⬛', '🐻', '🎀', '🐈‍⬛', '🐁', '🐦‍'];
 
+  limpiarPin(event: any) {
+    const elementoInput = event.target;
+    const valorOriginal = elementoInput.value;
+
+    const soloNumeros = valorOriginal.replace(/\D/g, '');
+
+    if (valorOriginal !== soloNumeros) {
+      elementoInput.value = soloNumeros;
+    }
+
+    this.pin.set(soloNumeros);
+  }
+
   formularioValido = computed(() => {
     const nombreLleno = this.nombre().trim().length > 0;
-    const pinCorrecto = String(this.pin()).trim().length === 4;
+    const pinTexto = String(this.pin()).trim();
+    const pinCorrecto = /^\d{4}$/.test(pinTexto);
 
     return nombreLleno && pinCorrecto;
   });
@@ -379,7 +393,7 @@ export class AdminPanel implements OnInit {
   }
 
   recordarPorWhatsApp(nombre: string) {
-    const mensaje = `${nombre}!! Hay partidos..y están por comenzar..aún te falta registrar tus pronósticos`;
+    const mensaje = `${nombre}!! \n\nHay partidos..y están por comenzar\n\nAún te falta registrar tus pronósticos`;
     const url = `https://wa.me/?text=${encodeURIComponent(mensaje)}`;
     window.open(url, '_blank');
   }

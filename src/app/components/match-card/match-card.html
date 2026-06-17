@@ -37,7 +37,9 @@
       @if (!votoActual()) {
         No registraste tu voto (0 pts)
       } @else if (resultadoApuesta() === 'ACERTO') {
-        Correcto +1 Punto
+        <div (click)="celebrarAcierto()" class="acierto-interactivo">
+          Correcto +1 Punto <span class="emoji-btn">🎉</span>
+        </div>
       } @else {
         Incorrecto (0 Pts)
       }

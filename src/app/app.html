@@ -7,7 +7,9 @@
     <nav class="navegacion-tabs">
       <button [class.activo]="vistaActual() === 'Pronósticos'" (click)="cargarPronosticos()">Pronósticos</button>
 
-      <button [class.activo]="vistaActual() === 'Ranking'" (click)="cargarRanking()">Ranking</button>
+      <button [class.activo]="vistaActual() === 'Ranking'" (click)="cargarRanking(); vistaActual.set('Ranking')">
+        Ranking
+      </button>
 
       <button [class.activo]="vistaActual() === 'Grupos'" (click)="vistaActual.set('Grupos')">Grupos</button>
 
@@ -15,10 +17,14 @@
         <button [class.activo]="vistaActual() === 'admin'" (click)="vistaActual.set('admin')">Admin</button>
       }
       <button class="btn-pin" style="margin-left: auto;" (click)="abrirModalPin()">🔑</button>
+
       <button class="btn-logout" style="margin-left: 0;" (click)="cerrarSesion()">Salir</button>
     </nav>
 
     @if (vistaActual() === 'Pronósticos') {
+      <div class="banner-trash-talk">
+        {{ mensajeSalseo() }}
+      </div>
 
       <div class="filtro-grupos">
         @for (dia of diasDisponibles(); track dia) {
@@ -37,7 +43,10 @@
             (votoEmitido)="registrarVoto($event, partido.id)">
           </app-match-card>
         } @empty {
-          <p class="mensaje-vacio">No hay partidos disponibles para este filtro.</p>
+          <div class="estado-vacio-osito">
+            <img src="assets/osito.png" alt="Osito" class="imagen-osito">
+            <p class="mensaje-vacio">Buscando..no hay partidos</p>
+          </div>
         }
       </div>
     }
@@ -48,14 +57,26 @@
         @for (usuario of listaRanking(); track usuario.nombre; let i = $index) {
           <div class="fila-ranking" [class.primer-lugar]="i === 0">
             <span class="posicion">
-              @if (i === 0) { 🥇 }
-              @else if (i === 1) { 🥈 }
-              @else if (i === 2) { 🥉 }
-              @else { {{ i + 1 }} }
+              @if (i === 0) {
+                🥇
+              } @else if (i === 1) {
+                🥈
+              } @else if (i === 2) {
+                🥉
+              } @else {
+                {{ i + 1 }}
+              }
             </span>
 
             <span class="avatar-ranking">{{ usuario.avatar }}</span>
-            <span class="nombre-ranking">{{ usuario.nombre }}</span>
+
+            <span class="nombre-ranking">
+              {{ usuario.nombre }}
+              @if (usuario.racha >= 3) {
+                <span class="fuego-racha">🔥x{{ usuario.racha }}</span>
+              }
+            </span>
+
             <span class="puntos-ranking">{{ usuario.puntos }} pts</span>
           </div>
         }
@@ -89,6 +110,12 @@
     }
 
     <div class="toast-notificacion" [class.visible]="mostrarToast()">
+      {{ toastMensaje() }}
+    </div>
+
+    <div class="toast-notificacion"
+         [class.visible]="mostrarToast()"
+         [class.toast-error]="esErrorToast()">
       {{ toastMensaje() }}
     </div>
 

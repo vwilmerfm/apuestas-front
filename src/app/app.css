@@ -1,6 +1,6 @@
 .toast-notificacion {
   position: fixed;
-  bottom: -100px;
+  top: -100px;
   left: 50%;
   transform: translateX(-50%);
   background-color: #00c853;
@@ -9,14 +9,19 @@
   border-radius: 8px;
   font-weight: bold;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-  transition: bottom 0.4s ease-in-out;
-  z-index: 1000;
+  transition: top 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+  z-index: 3000;
   text-align: center;
   width: max-content;
 }
 
 .toast-notificacion.visible {
-  bottom: 30px;
+  top: 20px;
+}
+
+.toast-notificacion.toast-error {
+  background-color: #ff3b30;
+  box-shadow: 0 4px 12px rgba(255, 59, 48, 0.5);
 }
 
 .navegacion-tabs {
@@ -351,4 +356,87 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.banner-trash-talk {
+  background: linear-gradient(90deg, rgba(0, 229, 255, 0.15) 0%, rgba(0, 229, 255, 0.02) 50%, rgba(0, 229, 255, 0.15) 100%);
+  border-left: 4px solid #00e5ff;
+  border-right: 4px solid #00e5ff;
+  border-radius: 8px;
+  color: white;
+  padding: 10px 15px;
+  font-weight: bold;
+  font-size: 14px;
+  margin: 0 20px 15px 20px;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0, 229, 255, 0.25);
+  animation: deslizarAbajo 0.4s ease-out;
+}
+
+@keyframes deslizarAbajo {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fuego-racha {
+  background: linear-gradient(90deg, #ff3b30, #ff9500);
+  color: white;
+  padding: 2px 6px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 900;
+  margin-left: 8px;
+  box-shadow: 0 0 8px rgba(255, 59, 48, 0.6);
+  animation: parpadeo-fuego 1s infinite alternate;
+}
+
+@keyframes parpadeo-fuego {
+  from {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+.estado-vacio-osito {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 50px 20px;
+  text-align: center;
+  animation: fadeIn 0.4s ease;
+}
+
+.imagen-osito {
+  width: 90px;
+  height: auto;
+  margin-bottom: 15px;
+  filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.5));
+  animation: flotar-osito 3s ease-in-out infinite;
+}
+
+@keyframes flotar-osito {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.estado-vacio-osito .mensaje-vacio {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0;
 }
