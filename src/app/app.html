@@ -4,6 +4,13 @@
     <app-login (loginExitoso)="iniciarSesion($event)"></app-login>
   } @else {
 
+    @if (miPerfil()) {
+      <div class="saludo-usuario">
+        <span class="avatar-saludo">{{ miPerfil().avatar }}</span>
+        <span class="texto-saludo">Hola, <strong>{{ miPerfil().nombre }}</strong></span>
+      </div>
+    }
+
     <nav class="navegacion-tabs">
       <button [class.activo]="vistaActual() === 'Pronósticos'" (click)="cargarPronosticos()">Pronósticos</button>
 
@@ -44,8 +51,8 @@
           </app-match-card>
         } @empty {
           <div class="estado-vacio-osito">
-            <img src="assets/osito.png" alt="Osito" class="imagen-osito">
-            <p class="mensaje-vacio">Buscando..no hay partidos</p>
+            <img ngSrc="assets/osito.png" width="90" height="90" alt="Osito" class="imagen-osito">
+            <p class="mensaje-vacio">Espere por favor..buscando partidos</p>
           </div>
         }
       </div>
@@ -55,7 +62,7 @@
       <div class="tabla-ranking">
         <h2>Tabla de Posiciones</h2>
         @for (usuario of listaRanking(); track usuario.nombre; let i = $index) {
-          <div class="fila-ranking" [class.primer-lugar]="i === 0">
+          <div class="fila-ranking" [class.primer-lugar]="i === 0" [class.yo]="usuario.id === usuarioActualId()">
             <span class="posicion">
               @if (i === 0) {
                 🥇
@@ -94,7 +101,11 @@
               <div class="lista-equipos-fase">
                 @for (eq of grupo.equipos; track eq.id) {
                   <div class="item-equipo-fase">
-                    <img [src]="eq.bandera" class="bandera-mini" alt="bandera">
+
+                    <div class="bandera-wrapper-mini">
+                      <img [ngSrc]="eq.bandera" fill class="bandera-mini" alt="bandera">
+                    </div>
+
                     <span>{{ eq.nombre }}</span>
                   </div>
                 }
@@ -126,12 +137,26 @@
 
           <div class="grupo-input">
             <label>PIN Actual</label>
-            <input type="number" [(ngModel)]="pinActual" placeholder="****" class="input-modal">
+            <input
+              [value]="pinActual()"
+              (input)="limpiarPinActual($event)"
+              type="password"
+              inputmode="numeric"
+              maxlength="4"
+              placeholder="****"
+              class="input-modal">
           </div>
 
           <div class="grupo-input">
             <label>Nuevo PIN</label>
-            <input type="number" [(ngModel)]="pinNuevo" placeholder="****" class="input-modal">
+            <input
+              [value]="pinNuevo()"
+              (input)="limpiarPinNuevo($event)"
+              type="password"
+              inputmode="numeric"
+              maxlength="4"
+              placeholder="****"
+              class="input-modal">
           </div>
 
           <div class="modal-botones">

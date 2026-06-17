@@ -1,5 +1,5 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MatchCard } from './components/match-card/match-card';
 import { forkJoin, interval } from 'rxjs';
@@ -86,7 +86,7 @@ const DICCIONARIO_EQUIPOS: Record<string, string> = {
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, MatchCard, Login, AdminPanel, FormsModule],
+  imports: [CommonModule, MatchCard, Login, AdminPanel, FormsModule, NgOptimizedImage],
   templateUrl: './app.html',
   styleUrls: ['./app.css'],
 })
@@ -94,6 +94,7 @@ export class App implements OnInit {
   private http = inject(HttpClient);
   loader = inject(LoaderService);
 
+  miPerfil = signal<any>(null);
   usuarioActualId = signal<number | null>(null);
   partidos = signal<any[]>([]);
 
@@ -149,6 +150,20 @@ export class App implements OnInit {
   pinActual = signal<string>('');
   pinNuevo = signal<string>('');
 
+  limpiarPinActual(event: any) {
+    const input = event.target;
+    const limpio = input.value.replace(/\D/g, '');
+    if (input.value !== limpio) input.value = limpio;
+    this.pinActual.set(limpio);
+  }
+
+  limpiarPinNuevo(event: any) {
+    const input = event.target;
+    const limpio = input.value.replace(/\D/g, '');
+    if (input.value !== limpio) input.value = limpio;
+    this.pinNuevo.set(limpio);
+  }
+
   mensajeSalseo = signal<string>('Que empiecen los pronósticos');
 
   seleccionarDia(dia: string, event: MouseEvent) {
@@ -181,6 +196,12 @@ export class App implements OnInit {
     this.usuarioActualId.set(id);
     this.cargarDatos(id);
     this.cargarRanking();
+    this.http.get<any[]>(`${environment.apiUrl}/usuarios`).subscribe({
+      next: (usuarios) => {
+        const yo = usuarios.find((u: any) => u.id === id);
+        if (yo) this.miPerfil.set(yo);
+      },
+    });
   }
 
   cargarDatos(usuarioId: number, enSegundoPlano = false) {
@@ -319,13 +340,9 @@ export class App implements OnInit {
           if (primero.id === this.usuarioActualId()) {
             this.mensajeSalseo.set(`Vas ganando, ${primero.nombre}..`);
           } else if (miUser && rankingSinAdmin.indexOf(miUser) === 1) {
-            this.mensajeSalseo.set(
-              `Ya casi logras superar a ${primero.nombre}..`,
-            );
+            this.mensajeSalseo.set(`Ya casi logras superar a ${primero.nombre}..`);
           } else {
-            this.mensajeSalseo.set(
-              `${primero.nombre}, lidera con ${primero.puntos} puntos`,
-            );
+            this.mensajeSalseo.set(`${primero.nombre}, lidera con ${primero.puntos} puntos`);
           }
         }
       },
@@ -340,7 +357,7 @@ export class App implements OnInit {
     this.usuarioActualId.set(null);
     this.partidos.set([]);
     this.listaRanking.set([]);
-
+    this.miPerfil.set(null);
     this.vistaActual.set('Pronósticos');
   }
 
@@ -360,6 +377,7 @@ export class App implements OnInit {
       setTimeout(() => this.mostrarToast.set(false), 3000);
       return;
     }
+
     const payload = {
       pinActual: String(this.pinActual()),
       pinNuevo: String(this.pinNuevo()),
