@@ -1,14 +1,13 @@
-<div class="tarjeta-partido">
+<div class="tarjeta-partido" [class.es-la-gran-final]="partido().fase.toUpperCase() === 'FINAL'">
   <div class="grupo-header">{{ partido().grupo }}</div>
 
   <div class="equipos-container">
     <div class="equipo">
       <div class="bandera-wrapper">
-        <img [ngSrc]="partido().equipoLocal.bandera" alt="Local" fill class="bandera">
+        <img [src]="partido().equipoLocal.bandera" alt="Local" class="bandera">
       </div>
       <span class="nombre-equipo">{{ partido().equipoLocal.nombre }}</span>
     </div>
-
 
     <div class="vs-badge">
       @if (partido().estado === 'FINALIZADO') {
@@ -20,7 +19,7 @@
 
     <div class="equipo">
       <div class="bandera-wrapper">
-        <img [ngSrc]="partido().equipoVisitante.bandera" alt="Visitante" fill class="bandera">
+        <img [src]="partido().equipoVisitante.bandera" alt="Visitante" class="bandera">
       </div>
       <span class="nombre-equipo">{{ partido().equipoVisitante.nombre }}</span>
     </div>
@@ -38,7 +37,7 @@
         No registraste tu voto (0 pts)
       } @else if (resultadoApuesta() === 'ACERTO') {
         <div (click)="celebrarAcierto()" class="acierto-interactivo">
-          Correcto +1 Punto <span class="emoji-btn">🎉</span>
+          Correcto +{{ puntosDelPartido() }} Punto{{ puntosDelPartido() > 1 ? 's' : '' }} <span class="emoji-btn">🎉</span>
         </div>
       } @else {
         Incorrecto (0 Pts)
@@ -64,5 +63,9 @@
             [disabled]="yaVoto() || partido().estado === 'FINALIZADO'"
             (click)="votar('VISITANTE')">Visita
     </button>
+  </div>
+
+  <div class="nota-empate">
+    * Las apuestas valen solo en los 90 minutos.
   </div>
 </div>

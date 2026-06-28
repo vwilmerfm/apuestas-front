@@ -105,11 +105,51 @@ export class App implements OnInit {
   vistaActual = signal<'Pronósticos' | 'Ranking' | 'admin' | 'Grupos'>('Pronósticos');
   listaRanking = signal<any[]>([]);
 
-  grupoSeleccionado = signal<string>('TODOS');
+  todosLosVotos = signal<any[]>([]);
+  usuarioEspiado = signal<any>(null);
+  historialEspia = signal<any[]>([]);
+  grupoEspiaSeleccionado = signal<string>('TODOS');
 
-  gruposDisponibles = computed(() => {
-    const grupos = this.partidos().map((p) => p.grupo);
-    return ['TODOS', ...new Set(grupos)];
+  historialEspiaFiltrado = computed(() => {
+    const seleccion = this.grupoEspiaSeleccionado();
+    if (seleccion === 'TODOS') return this.historialEspia();
+    return this.historialEspia().filter((p) => p.grupo === seleccion);
+  });
+
+  gruposEspiaDisponibles = computed(() => {
+    const grupos = this.historialEspia().map((p) => p.grupo);
+    const fasesUnicas = [...new Set(grupos)];
+
+    const ordenDeseado = [
+      'GRUPO A',
+      'GRUPO B',
+      'GRUPO C',
+      'GRUPO D',
+      'GRUPO E',
+      'GRUPO F',
+      'GRUPO G',
+      'GRUPO H',
+      'GRUPO I',
+      'GRUPO J',
+      'GRUPO K',
+      'GRUPO L',
+      'FASE 16',
+      'OCTAVOS',
+      'CUARTOS',
+      'SEMIFINALES',
+      'TERCER LUGAR',
+      'FINAL',
+    ];
+
+    fasesUnicas.sort((a, b) => {
+      const posA = ordenDeseado.indexOf(a.toUpperCase());
+      const posB = ordenDeseado.indexOf(b.toUpperCase());
+      const pesoA = posA === -1 ? 99 : posA;
+      const pesoB = posB === -1 ? 99 : posB;
+      return pesoA - pesoB;
+    });
+
+    return ['TODOS', ...fasesUnicas];
   });
 
   gruposMundial = computed(() => {
@@ -117,15 +157,63 @@ export class App implements OnInit {
     const grupos = [];
     let letraASCII = 65;
 
+    const partidosJugados = this.partidos().filter((p) => p.estado === 'FINALIZADO');
+
     for (let i = 0; i < entradas.length; i += 4) {
+      const nombreGrupo = 'GRUPO ' + String.fromCharCode(letraASCII);
+
       const equiposDelGrupo = entradas.slice(i, i + 4).map(([id, nombre]) => ({
         id,
         nombre,
         bandera: `https://flagcdn.com/w40/${id}.png`,
+        pj: 0,
+        g: 0,
+        e: 0,
+        p: 0,
+        gf: 0,
+        gc: 0,
+        dg: 0,
+        pts: 0,
       }));
 
+      const partidosDeEsteGrupo = partidosJugados.filter(
+        (p) => p.grupo.toUpperCase() === nombreGrupo,
+      );
+
+      partidosDeEsteGrupo.forEach((partido) => {
+        const eqLocal = equiposDelGrupo.find((e) => e.nombre === partido.equipoLocal.nombre);
+        const eqVisita = equiposDelGrupo.find((e) => e.nombre === partido.equipoVisitante.nombre);
+
+        if (eqLocal && eqVisita) {
+          eqLocal.pj++;
+          eqVisita.pj++;
+          eqLocal.gf += partido.golesLocal!;
+          eqLocal.gc += partido.golesVisitante!;
+          eqVisita.gf += partido.golesVisitante!;
+          eqVisita.gc += partido.golesLocal!;
+
+          if (partido.golesLocal! > partido.golesVisitante!) {
+            eqLocal.g++;
+            eqLocal.pts += 3;
+            eqVisita.p++;
+          } else if (partido.golesLocal! < partido.golesVisitante!) {
+            eqVisita.g++;
+            eqVisita.pts += 3;
+            eqLocal.p++;
+          } else {
+            eqLocal.e++;
+            eqVisita.e++;
+            eqLocal.pts += 1;
+            eqVisita.pts += 1;
+          }
+        }
+      });
+
+      equiposDelGrupo.forEach((eq) => (eq.dg = eq.gf - eq.gc));
+      equiposDelGrupo.sort((a, b) => b.pts - a.pts || b.dg - a.dg || b.gf - a.gf);
+
       grupos.push({
-        nombre: 'GRUPO ' + String.fromCharCode(letraASCII),
+        nombre: nombreGrupo,
         equipos: equiposDelGrupo,
       });
       letraASCII++;
@@ -133,18 +221,85 @@ export class App implements OnInit {
     return grupos;
   });
 
+  grupoSeleccionado = signal<string>('TODOS');
+
+  gruposDisponibles = computed(() => {
+    const grupos = this.partidos().map((p) => p.grupo);
+    const fasesUnicas = [...new Set(grupos)];
+
+    const ordenDeseado = [
+      'GRUPO A',
+      'GRUPO B',
+      'GRUPO C',
+      'GRUPO D',
+      'GRUPO E',
+      'GRUPO F',
+      'GRUPO G',
+      'GRUPO H',
+      'GRUPO I',
+      'GRUPO J',
+      'GRUPO K',
+      'GRUPO L',
+      'FASE 16',
+      'OCTAVOS',
+      'CUARTOS',
+      'SEMIFINALES',
+      'TERCER LUGAR',
+      'FINAL',
+    ];
+
+    fasesUnicas.sort((a, b) => {
+      const posA = ordenDeseado.indexOf(a.toUpperCase());
+      const posB = ordenDeseado.indexOf(b.toUpperCase());
+
+      const pesoA = posA === -1 ? 99 : posA;
+      const pesoB = posB === -1 ? 99 : posB;
+
+      return pesoA - pesoB;
+    });
+
+    return ['TODOS', ...fasesUnicas];
+  });
+
   diaSeleccionado = signal<string>('Hoy');
 
   diasDisponibles = computed(() => {
-    const dias = this.partidos().map((p) => p.diaFiltro);
+    let partidosDelGrupo = this.partidos();
+    if (this.grupoSeleccionado() !== 'TODOS') {
+      partidosDelGrupo = partidosDelGrupo.filter((p) => p.grupo === this.grupoSeleccionado());
+    }
+    const dias = partidosDelGrupo.map((p) => p.diaFiltro);
     return ['TODOS', ...new Set(dias)];
   });
 
   partidosFiltrados = computed(() => {
-    const seleccion = this.diaSeleccionado();
-    if (seleccion === 'TODOS') return this.partidos();
-    return this.partidos().filter((p) => p.diaFiltro === seleccion);
+    const seleccionDia = this.diaSeleccionado();
+    const seleccionGrupo = this.grupoSeleccionado();
+
+    let filtrados = this.partidos();
+
+    if (seleccionGrupo !== 'TODOS') {
+      filtrados = filtrados.filter((p) => p.grupo === seleccionGrupo);
+    }
+
+    if (seleccionDia !== 'TODOS') {
+      filtrados = filtrados.filter((p) => p.diaFiltro === seleccionDia);
+    }
+
+    return filtrados;
   });
+
+  torneoFinalizado = computed(() => {
+    return this.partidos().some(
+      (p) => p.fase.toUpperCase() === 'FINAL' && p.estado === 'FINALIZADO',
+    );
+  });
+
+  seleccionarGrupo(event: Event) {
+    const select = event.target as HTMLSelectElement;
+    this.grupoSeleccionado.set(select.value);
+    this.diaSeleccionado.set('TODOS');
+  }
 
   mostrarModalPin = signal<boolean>(false);
   pinActual = signal<string>('');
@@ -226,6 +381,8 @@ export class App implements OnInit {
       votos: this.http.get<any[]>(`${environment.apiUrl}/votos`, opciones),
     }).subscribe({
       next: (respuestas) => {
+        this.todosLosVotos.set(respuestas.votos);
+
         const misVotos = respuestas.votos.filter((v: any) => v.usuarioId === usuarioId);
 
         respuestas.partidos.sort((a: any, b: any) => {
@@ -245,6 +402,33 @@ export class App implements OnInit {
           if (fechaCorta === strHoy) etiquetaFiltro = 'Hoy';
           else if (fechaCorta === strAyer) etiquetaFiltro = 'Ayer';
           else if (fechaCorta === strManana) etiquetaFiltro = 'Mañana';
+
+          let resultadoApuesta = 'PENDIENTE';
+          let puntosGanados = 0;
+
+          if (p.estado === 'FINALIZADO') {
+            if (!votoEncontrado) {
+              resultadoApuesta = 'SIN_VOTO';
+            } else {
+              let resultadoReal = 'EMPATE';
+              if (p.golesLocal > p.golesVisitante) resultadoReal = 'LOCAL';
+              if (p.golesLocal < p.golesVisitante) resultadoReal = 'VISITANTE';
+
+              if (votoEncontrado.pronostico === resultadoReal) {
+                resultadoApuesta = 'ACERTO';
+                const fase = p.fase.toUpperCase();
+                if (fase.includes('FASE 16') || fase.includes('ELIMINATORIA')) puntosGanados = 2;
+                else if (fase.includes('OCTAVOS')) puntosGanados = 3;
+                else if (fase.includes('CUARTOS')) puntosGanados = 4;
+                else if (fase.includes('SEMIFINAL')) puntosGanados = 5;
+                else if (fase.includes('TERCER')) puntosGanados = 3;
+                else if (fase.includes('FINAL')) puntosGanados = 6;
+                else puntosGanados = 1;
+              } else {
+                resultadoApuesta = 'FALLO';
+              }
+            }
+          }
 
           return {
             id: p.id,
@@ -276,6 +460,8 @@ export class App implements OnInit {
             estado: p.estado,
             golesLocal: p.golesLocal,
             golesVisitante: p.golesVisitante,
+            resultadoApuesta: resultadoApuesta,
+            puntosGanados: puntosGanados,
           };
         });
 
@@ -340,7 +526,7 @@ export class App implements OnInit {
           if (primero.id === this.usuarioActualId()) {
             this.mensajeSalseo.set(`Vas ganando, ${primero.nombre}..`);
           } else if (miUser && rankingSinAdmin.indexOf(miUser) === 1) {
-            this.mensajeSalseo.set(`Ya casi logras superar a ${primero.nombre}..`);
+            this.mensajeSalseo.set(`Ya casi estas por superar a ${primero.nombre}..`);
           } else {
             this.mensajeSalseo.set(`${primero.nombre}, lidera con ${primero.puntos} puntos`);
           }
@@ -400,5 +586,60 @@ export class App implements OnInit {
           setTimeout(() => this.mostrarToast.set(false), 3000);
         },
       });
+  }
+
+  espiarUsuario(usuario: any) {
+    if (usuario.id === this.usuarioActualId()) return;
+
+    this.usuarioEspiado.set(usuario);
+    this.grupoEspiaSeleccionado.set('TODOS');
+
+    const idObjetivo = String(usuario.id || usuario.usuarioId);
+    const susVotos = this.todosLosVotos().filter((v) => String(v.usuarioId) === idObjetivo);
+
+    const partidosFinalizados = this.partidos().filter((p) => p.estado === 'FINALIZADO');
+
+    const historial = partidosFinalizados
+      .map((p) => {
+        const voto = susVotos.find((v) => String(v.partidoId) === String(p.id));
+
+        let resultado = 'SIN_VOTO';
+        let puntos = 0;
+        let nombreVoto = 'Ninguno';
+
+        if (voto) {
+          if (voto.pronostico === 'LOCAL') nombreVoto = p.equipoLocal.nombre;
+          else if (voto.pronostico === 'VISITANTE') nombreVoto = p.equipoVisitante.nombre;
+          else nombreVoto = 'Empate';
+
+          let resultadoReal = 'EMPATE';
+          if (p.golesLocal! > p.golesVisitante!) resultadoReal = 'LOCAL';
+          if (p.golesLocal! < p.golesVisitante!) resultadoReal = 'VISITANTE';
+
+          if (voto.pronostico === resultadoReal) {
+            resultado = 'ACERTO';
+            const fase = p.fase.toUpperCase();
+            if (fase.includes('FASE 16') || fase.includes('ELIMINATORIA')) puntos = 2;
+            else if (fase.includes('OCTAVOS')) puntos = 3;
+            else if (fase.includes('CUARTOS')) puntos = 4;
+            else if (fase.includes('SEMIFINAL')) puntos = 5;
+            else if (fase.includes('TERCER')) puntos = 3;
+            else if (fase.includes('FINAL')) puntos = 6;
+            else puntos = 1;
+          } else {
+            resultado = 'FALLO';
+          }
+        }
+
+        return {
+          ...p,
+          resultadoApuestaEspia: resultado,
+          puntosGanadosEspia: puntos,
+          suVotoNombre: nombreVoto,
+        };
+      })
+      .reverse();
+
+    this.historialEspia.set(historial);
   }
 }

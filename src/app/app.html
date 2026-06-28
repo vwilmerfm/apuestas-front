@@ -33,6 +33,14 @@
         {{ mensajeSalseo() }}
       </div>
 
+      <div class="contenedor-selector-fase">
+        <select class="select-fase" [value]="grupoSeleccionado()" (change)="seleccionarGrupo($event)">
+          @for (grupo of gruposDisponibles(); track grupo) {
+            <option [value]="grupo">{{ grupo === 'TODOS' ? '🏆 Todas las Fases' : grupo }}</option>
+          }
+        </select>
+      </div>
+
       <div class="filtro-grupos">
         @for (dia of diasDisponibles(); track dia) {
           <button
@@ -51,7 +59,7 @@
           </app-match-card>
         } @empty {
           <div class="estado-vacio-osito">
-            <img ngSrc="assets/osito.png" width="90" height="90" alt="Osito" class="imagen-osito">
+            <img src="assets/osito.png" width="90" height="90" alt="Osito" class="imagen-osito">
             <p class="mensaje-vacio">Espere por favor..buscando partidos</p>
           </div>
         }
@@ -60,9 +68,22 @@
 
     @if (vistaActual() === 'Ranking') {
       <div class="tabla-ranking">
-        <h2>Tabla de Posiciones</h2>
+
+        @if (torneoFinalizado() && listaRanking().length > 0) {
+          <div class="banner-campeon-supremo">
+            <img src="assets/ardilla.png" class="ardilla-campeona" alt="Ardilla Campeona">
+            <h3>LA APUESTA HA TERMINADO</h3>
+            <p>El ganador es: <strong>{{ listaRanking()[0].nombre }} 🥳</strong></p>
+          </div>
+        } @else {
+          <h2>Tabla de Posiciones</h2>
+        }
+
         @for (usuario of listaRanking(); track usuario.nombre; let i = $index) {
-          <div class="fila-ranking" [class.primer-lugar]="i === 0" [class.yo]="usuario.id === usuarioActualId()">
+          <div class="fila-ranking" [class.primer-lugar]="i === 0" [class.yo]="usuario.id === usuarioActualId()"
+               [class.interactiva]="usuario.id !== usuarioActualId()"
+               (click)="usuario.id !== usuarioActualId() ? espiarUsuario(usuario) : null">
+
             <span class="posicion">
               @if (i === 0) {
                 🥇
@@ -79,12 +100,10 @@
 
             <span class="nombre-ranking">
               {{ usuario.nombre }}
-              @if (usuario.racha >= 3) {
-                <span class="fuego-racha">🔥x{{ usuario.racha }}</span>
-              }
             </span>
 
             <span class="puntos-ranking">{{ usuario.puntos }} pts</span>
+
           </div>
         }
       </div>
@@ -98,21 +117,50 @@
           @for (grupo of gruposMundial(); track grupo.nombre) {
             <div class="tarjeta-fase-grupo">
               <div class="header-fase-grupo">{{ grupo.nombre }}</div>
-              <div class="lista-equipos-fase">
-                @for (eq of grupo.equipos; track eq.id) {
-                  <div class="item-equipo-fase">
 
-                    <div class="bandera-wrapper-mini">
-                      <img [ngSrc]="eq.bandera" fill class="bandera-mini" alt="bandera">
-                    </div>
-
-                    <span>{{ eq.nombre }}</span>
-                  </div>
-                }
+              <div class="contenedor-tabla">
+                <table class="tabla-estadisticas">
+                  <thead>
+                  <tr>
+                    <th class="col-equipo">Equipo</th>
+                    <th>PJ</th>
+                    <th>G</th>
+                    <th>E</th>
+                    <th>P</th>
+                    <th>GF</th>
+                    <th>GC</th>
+                    <th>DG</th>
+                    <th>Pts</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                    @for (eq of grupo.equipos; track eq.id; let i = $index) {
+                      <tr [class.zona-clasificacion]="i < 2">
+                        <td class="col-equipo">
+                          <span class="num-pos">{{ i + 1 }}</span>
+                          <div class="bandera-wrapper-mini">
+                            <img [ngSrc]="eq.bandera" fill class="bandera-mini" alt="bandera">
+                          </div>
+                          <span class="texto-equipo">{{ eq.nombre }}</span>
+                        </td>
+                        <td>{{ eq.pj }}</td>
+                        <td>{{ eq.g }}</td>
+                        <td>{{ eq.e }}</td>
+                        <td>{{ eq.p }}</td>
+                        <td>{{ eq.gf }}</td>
+                        <td>{{ eq.gc }}</td>
+                        <td>{{ eq.dg }}</td>
+                        <td class="col-puntos">{{ eq.pts }}</td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
               </div>
+
             </div>
           }
         </div>
+
       </div>
     }
 
@@ -166,6 +214,62 @@
         </div>
       </div>
     }
+  }
+
+  @if (usuarioEspiado()) {
+    <div class="modal-overlay" (click)="usuarioEspiado.set(null)">
+      <div class="modal-contenido modal-espia" (click)="$event.stopPropagation()">
+        <button class="btn-cerrar-espia" (click)="usuarioEspiado.set(null)">✖</button>
+
+        <h2 style="margin-bottom: 10px;">Historial de {{ usuarioEspiado().nombre }} {{ usuarioEspiado().avatar }}</h2>
+
+        <div class="contenedor-selector-fase" style="padding: 0; margin-bottom: 15px;">
+          <select class="select-fase" [value]="grupoEspiaSeleccionado()"
+                  (change)="grupoEspiaSeleccionado.set($any($event.target).value)">
+            @for (grupo of gruposEspiaDisponibles(); track grupo) {
+              <option [value]="grupo">{{ grupo === 'TODOS' ? '🏆 Todas las Fases' : grupo }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="contenedor-historial-espia">
+          @for (partido of historialEspiaFiltrado(); track partido.id) {
+            <div class="partido-compacto">
+              <div class="compacto-header">{{ partido.fecha }} - {{ partido.grupo }}</div>
+              <div class="compacto-body">
+                <div class="compacto-equipos">
+                  <div class="c-equipo">
+                    <img [src]="partido.equipoLocal.bandera" width="20" alt="L"
+                         style="border-radius: 2px; box-shadow: 0 1px 3px rgba(0,0,0,0.5);">
+                    <span>{{ partido.equipoLocal.nombre }}</span>
+                    <span class="c-goles">{{ partido.golesLocal }}</span>
+                  </div>
+                  <div class="c-equipo">
+                    <img [src]="partido.equipoVisitante.bandera" width="20" alt="V"
+                         style="border-radius: 2px; box-shadow: 0 1px 3px rgba(0,0,0,0.5);">
+                    <span>{{ partido.equipoVisitante.nombre }}</span>
+                    <span class="c-goles">{{ partido.golesVisitante }}</span>
+                  </div>
+                </div>
+                <div class="compacto-resultado">
+                  @if (partido.resultadoApuestaEspia === 'ACERTO') {
+                    <span class="badge-acierto">Correcto +{{ partido.puntosGanadosEspia }}</span>
+                  } @else if (partido.resultadoApuestaEspia === 'FALLO') {
+                    <span class="badge-fallo">Incorrecto</span>
+                  } @else {
+                    <span class="badge-neutro">⚪ Sin voto</span>
+                  }
+                  <div class="voto-hecho">Votó por:<br><strong>{{ partido.suVotoNombre }}</strong></div>
+                </div>
+              </div>
+            </div>
+          } @empty {
+            <p style="text-align: center; color: rgba(255,255,255,0.6); padding: 20px;">Aún no tiene partidos
+              finalizados.</p>
+          }
+        </div>
+      </div>
+    </div>
   }
 
   @if (loader.cargando()) {

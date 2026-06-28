@@ -5,7 +5,7 @@ import confetti from 'canvas-confetti';
 @Component({
   selector: 'app-match-card',
   standalone: true,
-  imports: [CommonModule, NgOptimizedImage],
+  imports: [CommonModule],
   templateUrl: './match-card.html',
   styleUrls: ['./match-card.css'],
 })
@@ -37,6 +37,14 @@ export class MatchCard implements OnInit {
     if (p.golesLocal! < p.golesVisitante!) resultadoReal = 'VISITANTE';
 
     return this.votoActual() === resultadoReal ? 'ACERTO' : 'FALLO';
+  });
+
+  puntosDelPartido = computed(() => {
+    const faseAjustada = this.partido().fase.toUpperCase();
+    if (faseAjustada.includes('OCTAVOS') || faseAjustada.includes('CUARTOS')) return 2;
+    if (faseAjustada.includes('SEMIFINAL') || faseAjustada.includes('TERCER')) return 3;
+    if (faseAjustada.includes('FINAL')) return 4;
+    return 1;
   });
 
   ngOnInit() {

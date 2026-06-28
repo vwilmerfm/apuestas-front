@@ -201,3 +201,24 @@
     transform: scale(1.3) rotate(10deg);
   }
 }
+
+.tarjeta-partido.es-la-gran-final {
+  background: linear-gradient(135deg, #2a2000 0%, #1a1400 100%);
+  border: 2px solid #ffd700;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+}
+
+.tarjeta-partido.es-la-gran-final .grupo-header {
+  background: #ffd700;
+  color: #000;
+}
+
+.nota-empate {
+  text-align: center;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.4);
+  padding-bottom: 15px;
+  margin-top: -5px;
+  font-style: italic;
+  letter-spacing: 0.5px;
+}
