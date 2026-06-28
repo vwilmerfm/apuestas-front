@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1781718283966,
+  "timestamp": 1782605707286,
   "index": "/apuestas-front/index.html",
   "assetGroups": [
     {
@@ -13,7 +13,7 @@
       "urls": [
         "/apuestas-front/favicon.ico",
         "/apuestas-front/index.html",
-        "/apuestas-front/main-OGHWSWUG.js",
+        "/apuestas-front/main-MJ3BAPCP.js",
         "/apuestas-front/manifest.webmanifest",
         "/apuestas-front/styles-PKB5I6ON.css"
       ],
@@ -27,6 +27,7 @@
         "ignoreVary": true
       },
       "urls": [
+        "/apuestas-front/assets/ardilla.png",
         "/apuestas-front/assets/osito.png",
         "/apuestas-front/icons/120x120.png",
         "/apuestas-front/icons/128x128.png",
@@ -46,6 +47,7 @@
   ],
   "dataGroups": [],
   "hashTable": {
+    "/apuestas-front/assets/ardilla.png": "cd66dc98d9ff95a144cbae8dda3b09f528a9b7fc",
     "/apuestas-front/assets/osito.png": "25221cbbbe6e695e7bb7d29e704fea4c5a119108",
     "/apuestas-front/favicon.ico": "5d0edee871198a6023e93406acf8a6bb2809c5b9",
     "/apuestas-front/icons/120x120.png": "f9649bd697824696797059ac52dab12976e0ae3a",
@@ -60,8 +62,8 @@
     "/apuestas-front/icons/512x512.png": "e1550c11fd59b4b1d448a245b792715f3d0436a2",
     "/apuestas-front/icons/72x72.png": "049178b1be6eb820a0fac95801e586fe6105de02",
     "/apuestas-front/icons/96x96.png": "d622a48ca8a2dcf6640346b1e3f4ad2da7303e6d",
-    "/apuestas-front/index.html": "3669ba3c53d6e2836044535d0a4dbfdbcdd05915",
-    "/apuestas-front/main-OGHWSWUG.js": "8f3c683c8069af23537be4d83990b638dd06a9b5",
+    "/apuestas-front/index.html": "e40957e29bc47774ce7852df8e31369e722e95a8",
+    "/apuestas-front/main-MJ3BAPCP.js": "bdc6777df75508959d49f6361b990059f647c731",
     "/apuestas-front/manifest.webmanifest": "52225fcda38a1519f3457229fd4b72920acfad6a",
     "/apuestas-front/styles-PKB5I6ON.css": "c4c6c68b4c15a6f29b88989fffc1060c9c371620"
   },
