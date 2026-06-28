@@ -41,10 +41,15 @@ export class MatchCard implements OnInit {
 
   puntosDelPartido = computed(() => {
     const faseAjustada = this.partido().fase.toUpperCase();
-    if (faseAjustada.includes('OCTAVOS') || faseAjustada.includes('CUARTOS')) return 2;
-    if (faseAjustada.includes('SEMIFINAL') || faseAjustada.includes('TERCER')) return 3;
-    if (faseAjustada.includes('FINAL')) return 4;
-    return 1;
+
+    if (faseAjustada.includes('FASE 16') || faseAjustada.includes('ELIMINATORIA')) return 2;
+    if (faseAjustada.includes('OCTAVOS')) return 3;
+    if (faseAjustada.includes('CUARTOS')) return 4;
+    if (faseAjustada.includes('SEMIFINAL')) return 5;
+    if (faseAjustada.includes('TERCER')) return 3;
+    if (faseAjustada.includes('FINAL')) return 6;
+
+    return 1; 
   });
 
   ngOnInit() {

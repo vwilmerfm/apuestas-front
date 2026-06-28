@@ -221,7 +221,7 @@
       <div class="modal-contenido modal-espia" (click)="$event.stopPropagation()">
         <button class="btn-cerrar-espia" (click)="usuarioEspiado.set(null)">✖</button>
 
-        <h2 style="margin-bottom: 10px;">Historial de {{ usuarioEspiado().nombre }} {{ usuarioEspiado().avatar }}</h2>
+        <h2 style="margin-bottom: 10px;">Votos de {{ usuarioEspiado().nombre }} {{ usuarioEspiado().avatar }}</h2>
 
         <div class="contenedor-selector-fase" style="padding: 0; margin-bottom: 15px;">
           <select class="select-fase" [value]="grupoEspiaSeleccionado()"

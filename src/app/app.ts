@@ -526,7 +526,7 @@ export class App implements OnInit {
           if (primero.id === this.usuarioActualId()) {
             this.mensajeSalseo.set(`Vas ganando, ${primero.nombre}..`);
           } else if (miUser && rankingSinAdmin.indexOf(miUser) === 1) {
-            this.mensajeSalseo.set(`Ya casi estas por superar a ${primero.nombre}..`);
+            this.mensajeSalseo.set(`Ya casi alcanzas a: ${primero.nombre}`);
           } else {
             this.mensajeSalseo.set(`${primero.nombre}, lidera con ${primero.puntos} puntos`);
           }
